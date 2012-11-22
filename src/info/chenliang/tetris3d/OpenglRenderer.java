@@ -7,6 +7,13 @@ import android.opengl.GLSurfaceView.Renderer;
 
 public class OpenglRenderer implements Renderer {
 
+	Game game;
+	
+	public OpenglRenderer(Game game) {
+		super();
+		this.game = game;
+	}
+
 	@Override
 	public void onDrawFrame(GL10 gl10) {
 		jniDrawFrame();
@@ -19,12 +26,7 @@ public class OpenglRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig config) {
-		try {
-			jniSurfaceCreated();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		jniSurfaceCreated();
 	}
 	
 	static

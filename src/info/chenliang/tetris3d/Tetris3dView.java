@@ -7,8 +7,6 @@ public class Tetris3dView extends GLSurfaceView {
 
 	public Tetris3dView(Context context) {
 		super(context);
-
-		
 	}
 
 }

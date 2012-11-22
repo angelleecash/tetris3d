@@ -15,16 +15,16 @@
 
 void printGLString(const char *name, GLenum s) {
     const char *v = (const char *) glGetString(s);
-    LOGI("---------------------------GL %s = %s\n", name, v);
+    LOGI("GL %s = %s\n", name, v);
 }
 
 JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCreated
   (JNIEnv* env, jobject object)
 {
-//    printGLString("Version", GL_VERSION);
-//    printGLString("Vendor", GL_VENDOR);
-//    printGLString("Renderer", GL_RENDERER);
-//    printGLString("Extensions", GL_EXTENSIONS);
+    printGLString("Version", GL_VERSION);
+    printGLString("Vendor", GL_VENDOR);
+    printGLString("Renderer", GL_RENDERER);
+    printGLString("Extensions", GL_EXTENSIONS);
 }
 
 /*
