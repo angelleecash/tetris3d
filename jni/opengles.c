@@ -64,8 +64,22 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
 
+	int size = (*env)->GetArrayLength(env, blockFrameArray);
+
+	int color[4][4] = {
+						{1.0, 0, 0, 1.0},
+						{0, 1.0, 0, 1.0},
+						{0, 0, 1.0, 1.0},
+						{1.0, 1.0, 0, 1.0},
+					};
+
+	for(int i=0; i < size; i ++)
+	{
+		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
+
+		glClearColor(color[i][0], color[i][1], color[i][2], 1.0f);
+		glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	}
 
 
-	glClearColor(1.0f, 0, 0, 1.0f);
-	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }
