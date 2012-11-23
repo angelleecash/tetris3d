@@ -1,13 +1,12 @@
 package info.chenliang.tetris3d;
 
-import java.util.List;
 
 public class BlockFrame {
-	public List<BlockCell> cells;
+	public BlockCell[] blockCells;
 
-	public BlockFrame(List<BlockCell> cells) {
+	public BlockFrame(BlockCell[] blockCells) {
 		super();
-		this.cells = cells;
+		this.blockCells = blockCells;
 	}
 	
 }

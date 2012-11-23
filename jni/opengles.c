@@ -44,8 +44,14 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCha
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
-  (JNIEnv* env, jobject object)
+  (JNIEnv* env, jobject object, jobject game)
 {
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	jclass gameClass = (*env)->GetObjectClass(env, game);
+	jfieldID blockContainerId = (*env)->GetFieldID(env, gameClass, "blockContainer", "Linfo/chenliang/tetris3d/BlockContainer;");
+
+	jobject blockContainer = (*env)->GetObjectField(env, game, blockContainerId);
+
+
+	glClearColor(0.5f, 0, 0, 1.0f);
 	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }

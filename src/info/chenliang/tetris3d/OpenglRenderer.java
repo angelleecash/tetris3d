@@ -16,7 +16,7 @@ public class OpenglRenderer implements Renderer {
 
 	@Override
 	public void onDrawFrame(GL10 gl10) {
-		jniDrawFrame();
+		jniDrawFrame(game);
 	}
 
 	@Override
@@ -36,5 +36,5 @@ public class OpenglRenderer implements Renderer {
 	
 	private native void jniSurfaceCreated();
 	private native void jniSurfaceChanged(int width, int height);
-	private native void jniDrawFrame();
+	private native void jniDrawFrame(Game game);
 }

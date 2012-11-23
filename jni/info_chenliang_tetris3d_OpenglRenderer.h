@@ -26,10 +26,10 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCha
 /*
  * Class:     info_chenliang_tetris3d_OpenglRenderer
  * Method:    jniDrawFrame
- * Signature: ()V
+ * Signature: (Linfo/chenliang/tetris3d/Game;)V
  */
 JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobject);
 
 #ifdef __cplusplus
 }

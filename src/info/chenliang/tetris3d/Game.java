@@ -4,15 +4,24 @@ import android.opengl.GLSurfaceView;
 
 public class Game implements Runnable{
 
-	private static final int REFRESH_INTERVAL = 30;
+	public static final int REFRESH_INTERVAL = 30;
 	
-	private boolean running;
-	private Thread thread;
-	private GLSurfaceView view;
+	public boolean running;
+	public Thread thread;
+	public GLSurfaceView view;
 	
+	public BlockContainer blockContainer;
+	public Block block;
+	
+	public BlockFrameGenerator blockFrameGenerator;
+	public int a;
 	public Game(GLSurfaceView view) {
 		super();
 		this.view = view;
+		blockContainer = new BlockContainer();
+		blockFrameGenerator = new BlockFrameGenerator();
+		
+		block = new Block(0, 0, 0, 0, blockFrameGenerator.generateBlockFrames());
 	}
 
 	public void start()
