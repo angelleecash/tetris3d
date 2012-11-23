@@ -47,11 +47,25 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
   (JNIEnv* env, jobject object, jobject game)
 {
 	jclass gameClass = (*env)->GetObjectClass(env, game);
-	jfieldID blockContainerId = (*env)->GetFieldID(env, gameClass, "blockContainer", "Linfo/chenliang/tetris3d/BlockContainer;");
 
-	jobject blockContainer = (*env)->GetObjectField(env, game, blockContainerId);
+	jfieldID blockContainerFieldId = (*env)->GetFieldID(env, gameClass, "blockContainer", "Linfo/chenliang/tetris3d/BlockContainer;");
+	jobject blockContainer = (*env)->GetObjectField(env, game, blockContainerFieldId);
+
+	jfieldID blockFieldId = (*env)->GetFieldID(env, gameClass, "block", "Linfo/chenliang/tetris3d/Block;");
+	jobject block = (*env)->GetObjectField(env, game, blockFieldId);
+
+//	public float x,y,z;
+//	public int color;
+//	public BlockFrame[] blockFrames;
 
 
-	glClearColor(0.5f, 0, 0, 1.0f);
+
+	jclass blockClass = (*env)->GetObjectClass(env, block);
+	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
+	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
+
+
+
+	glClearColor(1.0f, 0, 0, 1.0f);
 	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }
