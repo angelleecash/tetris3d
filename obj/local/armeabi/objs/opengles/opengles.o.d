@@ -33,6 +33,19 @@ obj/local/armeabi/objs/opengles/opengles.o: jni/opengles.c \
  E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/machine/internal_types.h \
  E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/machine/limits.h \
  E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/syslimits.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/unistd.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/select.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/time.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/linux/time.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/signal.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/signal.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm-generic/signal.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/sigcontext.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/siginfo.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm-generic/siginfo.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/sysconf.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/linux/capability.h \
+ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/pathconf.h \
  jni/info_chenliang_tetris3d_OpenglRenderer.h
 
 E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/jni.h:
@@ -102,5 +115,31 @@ E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/machine/internal_ty
 E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/machine/limits.h:
 
 E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/syslimits.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/unistd.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/select.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/time.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/linux/time.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/signal.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/signal.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm-generic/signal.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/sigcontext.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm/siginfo.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/asm-generic/siginfo.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/sys/sysconf.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/linux/capability.h:
+
+E:/android-ndk-r8c/platforms/android-14/arch-arm/usr/include/pathconf.h:
 
 jni/info_chenliang_tetris3d_OpenglRenderer.h:

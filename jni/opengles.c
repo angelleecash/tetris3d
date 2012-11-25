@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <unistd.h>
 #include "info_chenliang_tetris3d_OpenglRenderer.h"
 
 #define  LOG_TAG    "opengles"
@@ -25,6 +26,28 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
     printGLString("Vendor", GL_VENDOR);
     printGLString("Renderer", GL_RENDERER);
     printGLString("Extensions", GL_EXTENSIONS);
+
+    const GLchar* vertexShaderCode = "uniform mat4 finalMatrix;\n"
+    								 "attribute vec4 vertexPosition;\n"
+			  	  	  	  	  	  	 "attribute vec4 vertexColor;\n"
+			  	  	  	  	  	  	 "varying vec4 interpolatedColor;\n"
+			  	  	  	  	  	  	 "void main()\n"
+			  	  	  	  	  	  	 "{\n"
+			    					 	 "gl_Position = finalMatrix * vertexPosition;\n"
+    									 "interpolatedColor = vertexColor;\n"
+			  	  	  	  	  	  	 "}\n";
+
+    const GLchar** vertexShaderSource = (const GLchar**)malloc(sizeof(const GLchar*));
+    	*vertexShaderSource = vertexShaderCode;
+
+    	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    	int length[1]= {strlen(vertexShaderCode)};
+
+    	glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
+    	glCompileShader(vertexShader);
+    	int status[4];
+    	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, status);
+    	LOGE("vertex shader compile status %d", status[0]);
 }
 
 /*
@@ -35,6 +58,8 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
 JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceChanged
   (JNIEnv* env, jobject object, jint width, jint height)
 {
+	glViewport(0, 0, width, height);
+	LOGE("setting view port %d %d.", width, height);
 
 }
 
@@ -65,21 +90,23 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
 
 	int size = (*env)->GetArrayLength(env, blockFrameArray);
-
-	int color[4][4] = {
+//size =4;
+	float color[4][4] = {
 						{1.0, 0, 0, 1.0},
 						{0, 1.0, 0, 1.0},
 						{0, 0, 1.0, 1.0},
 						{1.0, 1.0, 0, 1.0},
 					};
-
+	//size=1;
+//	LOGI("size %d", size);
 	for(int i=0; i < size; i ++)
 	{
 		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
 
 		glClearColor(color[i][0], color[i][1], color[i][2], 1.0f);
-		glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
+
 
 
 }

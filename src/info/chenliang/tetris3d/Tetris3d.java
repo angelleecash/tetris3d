@@ -18,7 +18,7 @@ public class Tetris3d extends Activity {
         setFullScreen();
         
         Tetris3dView view = new Tetris3dView(this);
-        
+       
         game = new Game(view);
         
         view.setEGLContextClientVersion(2);

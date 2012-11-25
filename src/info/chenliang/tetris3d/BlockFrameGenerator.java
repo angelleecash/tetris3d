@@ -12,6 +12,30 @@ public class BlockFrameGenerator {
 		
 		blockFrames[0] = new BlockFrame(blockCells);
 		
+		blockCells = new BlockCell[4];
+		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
+		blockCells[1] = new BlockCell(0.0f, 1.0f, 0.0f);
+		blockCells[2] = new BlockCell(0.0f, 0.0f, -1.0f);
+		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
+		
+		blockFrames[1] = new BlockFrame(blockCells);
+		
+		blockCells = new BlockCell[4];
+		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
+		blockCells[1] = new BlockCell(0.0f, 0.0f, -1.0f);
+		blockCells[2] = new BlockCell(0.0f, 0.0f, 1.0f);
+		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
+		
+		blockFrames[2] = new BlockFrame(blockCells);
+		
+		blockCells = new BlockCell[4];
+		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
+		blockCells[1] = new BlockCell(0.0f, 1.0f, 0.0f);
+		blockCells[2] = new BlockCell(0.0f, 0.0f, 1.0f);
+		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
+		
+		blockFrames[3] = new BlockFrame(blockCells);
+		
 		return blockFrames;
 	}
 }
