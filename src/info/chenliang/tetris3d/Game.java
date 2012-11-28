@@ -1,6 +1,7 @@
 package info.chenliang.tetris3d;
 
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 
 public class Game implements Runnable{
 
@@ -14,7 +15,15 @@ public class Game implements Runnable{
 	public Block block;
 	
 	public BlockFrameGenerator blockFrameGenerator;
-	public int a;
+//	public Matrix modelMatrix;
+//	public Matrix viewMatrix;
+	//public Matrix projectionMatrix;
+	float[] projectionMatrix = new float[16];
+	float[] viewMatrix = new float[16];
+	float[] modelMatrix = new float[16];
+	float[] finalMatrix = new float[16];
+	
+	
 	public Game(GLSurfaceView view) {
 		super();
 		this.view = view;
@@ -22,8 +31,7 @@ public class Game implements Runnable{
 		blockFrameGenerator = new BlockFrameGenerator();
 		
 		block = new Block(0, 0, 0, 0, blockFrameGenerator.generateBlockFrames());
-		
-		System.out.println(block.blockFrames);
+		System.out.println(finalMatrix);
 	}
 
 	public void start()

@@ -19,6 +19,10 @@ void printGLString(const char *name, GLenum s) {
     LOGI("GL %s = %s\n", name, v);
 }
 
+int finalMatrix;
+int vertexPosition;
+int vertexColor;
+
 JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCreated
   (JNIEnv* env, jobject object)
 {
@@ -85,6 +89,11 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
 
     LOGE("program status\n %s\n", log);
 
+    finalMatrix = glGetUniformLocation(program, "finalMatrix");
+    vertexPosition = glGetAttribLocation(program, "vertexPosition");
+    vertexColor = glGetAttribLocation(program, "vertexColor");
+
+    glUseProgram(program);
 }
 
 /*
@@ -120,23 +129,29 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
 
-	int size = (*env)->GetArrayLength(env, blockFrameArray);
+	jfieldID finalMatrixFieldId = (*env)->GetFieldID(env, gameClass, "finalMatrix", "[F");
+	jfloatArray finalMatrixArray = (*env)->GetObjectField(env, game, finalMatrixFieldId);
+	const jfloat* finalMatrixPointer  = (*env)->GetFloatArrayElements(env, finalMatrixArray, 0);
 
-	float color[4][4] = {
-						{1.0, 0, 0, 1.0},
-						{0, 1.0, 0, 1.0},
-						{0, 0, 1.0, 1.0},
-						{1.0, 1.0, 0, 1.0},
-					};
+	glUniformMatrix4fv(finalMatrix, 1, 0, finalMatrixPointer);
+//	int size = (*env)->GetArrayLength(env, blockFrameArray);
+//
+//	float color[4][4] = {
+//						{1.0, 0, 0, 1.0},
+//						{0, 1.0, 0, 1.0},
+//						{0, 0, 1.0, 1.0},
+//						{1.0, 1.0, 0, 1.0},
+//					};
+//
+//	for(int i=0; i < size; i ++)
+//	{
+//		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
+//
+//		glClearColor(color[i][0], color[i][1], color[i][2], 1.0f);
+//		glClear(GL_COLOR_BUFFER_BIT);
+//	}
 
-	for(int i=0; i < size; i ++)
-	{
-		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
-
-		glClearColor(color[i][0], color[i][1], color[i][2], 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
-
-
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 }
