@@ -38,16 +38,53 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
 			  	  	  	  	  	  	 "}\n";
 
     const GLchar** vertexShaderSource = (const GLchar**)malloc(sizeof(const GLchar*));
-    	*vertexShaderSource = vertexShaderCode;
+    *vertexShaderSource = vertexShaderCode;
 
-    	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    	int length[1]= {strlen(vertexShaderCode)};
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    int length[1]= {strlen(vertexShaderCode)};
 
-    	glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
-    	glCompileShader(vertexShader);
-    	int status[4];
-    	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, status);
-    	LOGE("vertex shader compile status %d", status[0]);
+    glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+    int status[4];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, status);
+    LOGE("vertex shader compile status %d", status[0]);
+
+    const GLchar* pixelShaderCode = "precision mediump float;\n"
+    								"varying vec4 interpolatedColor;\n"
+    								"void main()\n"
+    			  	  	  	  	  	"{\n"
+    									"gl_FragColor = interpolatedColor;\n"
+    			  	  	  	  	  	"}\n";
+    const GLchar** pixelShaderSource = (const GLchar**)malloc(sizeof(const GLchar*));
+    *pixelShaderSource = pixelShaderCode;
+
+    GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+    length[0]= strlen(pixelShaderCode);
+
+    glShaderSource(pixelShader, 1, pixelShaderSource, NULL);
+    glCompileShader(pixelShader);
+
+    glGetShaderiv(pixelShader, GL_COMPILE_STATUS, status);
+    LOGE("pixel shader compile status %d", status[0]);
+
+    int program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, pixelShader);
+
+    glBindAttribLocation(program, 0, "vertexPosition");
+    glBindAttribLocation(program, 1, "vertexColor");
+
+    glLinkProgram(program);
+    int size = 4096;
+    GLchar info[size];
+    GLsizei logSize = 0;
+    glGetProgramInfoLog(program, size, &logSize, info);
+
+    char log[logSize];
+    strncpy(log, info, logSize);
+
+    LOGE("program status\n %s\n", log);
+
 }
 
 /*
@@ -79,26 +116,19 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jfieldID blockFieldId = (*env)->GetFieldID(env, gameClass, "block", "Linfo/chenliang/tetris3d/Block;");
 	jobject block = (*env)->GetObjectField(env, game, blockFieldId);
 
-//	public float x,y,z;
-//	public int color;
-//	public BlockFrame[] blockFrames;
-
-
-
 	jclass blockClass = (*env)->GetObjectClass(env, block);
 	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
 
 	int size = (*env)->GetArrayLength(env, blockFrameArray);
-//size =4;
+
 	float color[4][4] = {
 						{1.0, 0, 0, 1.0},
 						{0, 1.0, 0, 1.0},
 						{0, 0, 1.0, 1.0},
 						{1.0, 1.0, 0, 1.0},
 					};
-	//size=1;
-//	LOGI("size %d", size);
+
 	for(int i=0; i < size; i ++)
 	{
 		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
