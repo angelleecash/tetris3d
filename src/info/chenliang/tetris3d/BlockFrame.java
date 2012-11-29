@@ -2,11 +2,13 @@ package info.chenliang.tetris3d;
 
 
 public class BlockFrame {
-	public BlockCell[] blockCells;
+	public float[] vertices;
+	public byte[] indices;
 
-	public BlockFrame(BlockCell[] blockCells) {
+	public BlockFrame(float[] blockCells, byte[] indices) {
 		super();
-		this.blockCells = blockCells;
+		this.vertices = blockCells;
+		this.indices = indices;
 	}
 	
 }
