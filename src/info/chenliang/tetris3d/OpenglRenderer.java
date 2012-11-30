@@ -16,19 +16,35 @@ public class OpenglRenderer implements Renderer {
 		this.game = game;
 	}
 
+	int angle = 0;
+	
 	@Override
 	public void onDrawFrame(GL10 gl10) {
 		long time = SystemClock.uptimeMillis() % 10000L;
-		float angleInDegrees = (360.0f/10000.0f)*((int)time);
+		angle += 1;
+		angle %= 360;
+		
+		//float angleInDegrees = (360.0f/10000.0f)*((int)time);
+		float angleInDegrees = angle;
 		
 		Matrix.setIdentityM(game.modelMatrix, 0);
 		Matrix.rotateM(game.modelMatrix, 0, angleInDegrees, 0, 0, 1);
 		
-		Matrix.setIdentityM(game.viewMatrix, 0);
+		//Matrix.setIdentityM(game.viewMatrix, 0);
 		
 		Matrix.multiplyMM(game.finalMatrix, 0, game.viewMatrix, 0, game.modelMatrix, 0);
 		Matrix.multiplyMM(game.finalMatrix, 0, game.projectionMatrix, 0, game.finalMatrix, 0);
-		
+//		for(int i=0;i < 16 ;i ++)
+//		{
+//			if(i % 4 ==0)
+//			{
+//				System.out.println();
+//			}
+//			
+//			System.out.print(game.finalMatrix[i] + " ");
+//		}
+//		
+//		System.out.println();
 		jniDrawFrame(game);
 	}
 
@@ -36,9 +52,9 @@ public class OpenglRenderer implements Renderer {
 	public void onSurfaceChanged(GL10 gl10, int width, int height) {
 		
 		 // Position the eye behind the origin.
-	    final float eyeX = 1.0f;
+	    final float eyeX = 40.0f;
 	    final float eyeY = 0.0f;
-	    final float eyeZ = 1.0f;
+	    final float eyeZ = 40.0f;
 	 
 	    // We are looking toward the distance
 	    final float lookX = 0.0f;
@@ -60,8 +76,8 @@ public class OpenglRenderer implements Renderer {
 		float right = aspectRatio;
 		float bottom = -1.0f;
 		float top = 1.0f;
-		float near = 1.0f;
-		float far = 10f;
+		float near = 0.1f;
+		float far = 100f;
 		
 		Matrix.frustumM(game.projectionMatrix, 0, left, right, bottom, top, near, far);
 		

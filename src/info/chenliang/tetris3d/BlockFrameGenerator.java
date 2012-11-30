@@ -6,8 +6,8 @@ public class BlockFrameGenerator {
 		BlockFrame[] blockFrames = new BlockFrame[4];
 		BlockCell[] blockCells = new BlockCell[4];
 		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
-		blockCells[1] = new BlockCell(0.0f, 0.0f, -1.0f);
-		blockCells[2] = new BlockCell(0.0f, 0.0f, 1.0f);
+		blockCells[1] = new BlockCell(1.0f, 0.0f, 0.0f);
+		blockCells[2] = new BlockCell(-1.0f, 0.0f, 0.0f);
 		blockCells[3] = new BlockCell(0.0f, 1.0f, 0.0f);
 		
 		blockFrames[0] = generateBlockFrame(blockCells);
@@ -15,15 +15,15 @@ public class BlockFrameGenerator {
 		blockCells = new BlockCell[4];
 		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
 		blockCells[1] = new BlockCell(0.0f, 1.0f, 0.0f);
-		blockCells[2] = new BlockCell(0.0f, 0.0f, -1.0f);
-		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
+		blockCells[2] = new BlockCell(0.0f, -1.0f, 0.0f);
+		blockCells[3] = new BlockCell(1.0f, 0.0f, 0.0f);
 		
 		blockFrames[1] = generateBlockFrame(blockCells);
 		
 		blockCells = new BlockCell[4];
 		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
-		blockCells[1] = new BlockCell(0.0f, 0.0f, -1.0f);
-		blockCells[2] = new BlockCell(0.0f, 0.0f, 1.0f);
+		blockCells[1] = new BlockCell(1.0f, 0.0f, 0.0f);
+		blockCells[2] = new BlockCell(-1.0f, 0.0f, 0.0f);
 		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
 		
 		blockFrames[2] = generateBlockFrame(blockCells);
@@ -31,7 +31,7 @@ public class BlockFrameGenerator {
 		blockCells = new BlockCell[4];
 		blockCells[0] = new BlockCell(0.0f, 0.0f, 0.0f);
 		blockCells[1] = new BlockCell(0.0f, 1.0f, 0.0f);
-		blockCells[2] = new BlockCell(0.0f, 0.0f, 1.0f);
+		blockCells[2] = new BlockCell(-1.0f, 0.0f, 0.0f);
 		blockCells[3] = new BlockCell(0.0f, -1.0f, 0.0f);
 		
 		blockFrames[3] = generateBlockFrame(blockCells);
@@ -54,9 +54,9 @@ public class BlockFrameGenerator {
 			float y = blockCell.y - 0.5f;			
 			for(int j=0 ;j < 4; j ++)
 			{
-				vertices[offset] = x + 0.5f*(i%3==0?-1:1);
+				vertices[offset] = x + 0.5f*(j%3==0?-1:1);
 				vertices[offset+1] = y;
-				vertices[offset+2] = z + 0.5f*(i<2?-1:1);
+				vertices[offset+2] = z + 0.5f*(j<2?-1:1);
 				
 				offset += 3;
 			}
@@ -64,9 +64,9 @@ public class BlockFrameGenerator {
 			y = blockCell.y + 0.5f;
 			for(int j=0 ;j < 4; j ++)
 			{
-				vertices[offset] = x + 0.5f*(i%3==0?-1:1);
+				vertices[offset] = x + 0.5f*(j%3==0?-1:1);
 				vertices[offset+1] = y;
-				vertices[offset+2] = z + 0.5f*(i<2?-1:1);
+				vertices[offset+2] = z + 0.5f*(j<2?-1:1);
 				
 				offset += 3;
 			}
@@ -74,10 +74,10 @@ public class BlockFrameGenerator {
 		
 		for(int i=0; i <vertices.length; i++)
 		{
-			vertices[i] *= 30;
+			vertices[i] *= 60;
 		}
 		
-		byte[] indices= {1,2,3,
+		byte[] baseIndices= {1,2,3,
 						 3,0,1,
 						 4,7,6,
 						 4,6,5,
@@ -89,6 +89,18 @@ public class BlockFrameGenerator {
 						 2,6,3,
 						 0,3,4,
 						 3,7,4};
+		
+		byte[] indices = new byte[4*6*2*3];
+		System.arraycopy(baseIndices, 0, indices, 0, 6*2*3);
+		
+		for(int i=1; i <= 3; i++)
+		{
+			int offset = i*6*2*3;
+			for(int j=0; j < baseIndices.length; j++)
+			{
+				indices[offset + j] = (byte)(offset + baseIndices[j]);
+			}
+		}
 		
 		return new BlockFrame(vertices, indices);
 	}

@@ -16,7 +16,7 @@
 
 void printGLString(const char *name, GLenum s) {
     const char *v = (const char *) glGetString(s);
-    LOGI("GL %s = %s\n", name, v);
+    LOGE("GL %s = %s\n", name, v);
 }
 
 int finalMatrix;
@@ -90,10 +90,12 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
     glAttachShader(program, vertexShader);
     glAttachShader(program, pixelShader);
 
-    glBindAttribLocation(program, 0, "vertexPosition");
-    glBindAttribLocation(program, 1, "vertexColor");
-
     glLinkProgram(program);
+
+//    glBindAttribLocation(program, 0, "vertexPosition");
+//    glBindAttribLocation(program, 1, "vertexColor");
+
+
     int size = 4096;
     GLchar info[size];
     GLsizei logSize = 0;
@@ -157,12 +159,15 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jfloatArray finalMatrixArray = (*env)->GetObjectField(env, game, finalMatrixFieldId);
 	const jfloat* finalMatrixPointer  = (*env)->GetFloatArrayElements(env, finalMatrixArray, 0);
 
-	glUniformMatrix4fv(finalMatrix, 1, 0, finalMatrixPointer);
+	glUniformMatrix4fv(finalMatrix, 1, GL_FALSE, finalMatrixPointer);
 
 //	LOGE("%.4f %.4f %.4f %.4f ", finalMatrixPointer[0], finalMatrixPointer[1], finalMatrixPointer[2], finalMatrixPointer[3]);
 //	LOGE("%.4f %.4f %.4f %.4f ", finalMatrixPointer[4], finalMatrixPointer[5], finalMatrixPointer[6], finalMatrixPointer[7]);
 //	LOGE("%.4f %.4f %.4f %.4f ", finalMatrixPointer[8], finalMatrixPointer[9], finalMatrixPointer[10], finalMatrixPointer[11]);
 //	LOGE("%.4f %.4f %.4f %.4f ", finalMatrixPointer[12], finalMatrixPointer[13], finalMatrixPointer[14], finalMatrixPointer[15]);
+//
+//	if(1)
+//	return;
 	jclass blockClass = (*env)->GetObjectClass(env, block);
 	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
@@ -206,14 +211,13 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 
 	//glClearColor(red, green, blue, 1.0f);
 	glClearColor(1.0, 1.0, 1.0, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glFrontFace(GL_CW);
+	glFrontFace(GL_CCW);
 
-	int floatSize = 4;
 	jclass blockFrameClass = (*env)->FindClass(env, "info/chenliang/tetris3d/BlockFrame");
 
-	for(int i=0; i < 1; i ++)
+	for(int i=0; i < size; i ++)
 	{
 		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
 
@@ -221,18 +225,26 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 		jfloatArray verticesArray = (*env)->GetObjectField(env, blockFrame, verticesFieldId);
 		const jfloat* vertices  = (*env)->GetFloatArrayElements(env, verticesArray, 0);
 
-		glVertexAttribPointer(vertexPosition, floatSize, GL_FLOAT, GL_FALSE, 3*floatSize, vertices);
+		glVertexAttribPointer(vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertices);
 		glEnableVertexAttribArray(vertexPosition);
 
 		jfieldID indicesFieldId = (*env)->GetFieldID(env, blockFrameClass, "indices", "[B");
 		jbyteArray indicesArray = (*env)->GetObjectField(env, blockFrame, indicesFieldId);
 		const jbyte* indices  = (*env)->GetByteArrayElements(env, indicesArray, 0);
 
+//		LOGE("%d %d %d", indices[0], indices[1],indices[2]);
+//		LOGE("%d %d %d", indices[3], indices[4],indices[5]);
+//		LOGE("%d %d %d", indices[6], indices[7],indices[8]);
+//		LOGE("%d %d %d", indices[9], indices[10],indices[11]);
+//		LOGE("%d %d %d", indices[12], indices[13],indices[14]);
+//		LOGE("%d %d %d", indices[15], indices[16],indices[17]);
+
 //		glVertexAttribPointer(vertexColor, 1, GL_BYTE, GL_FALSE, 1, indices);
 //		glEnableVertexAttribArray(vertexColor);
 
-//		glEnableVertexAttribArray(indices);
-		glDrawElements(GL_TRIANGLES, 6*2, GL_UNSIGNED_BYTE, indices);
+		//glEnableVertexAttribArray(indices);
+		glDrawElements(GL_TRIANGLES, 4*6*2, GL_UNSIGNED_BYTE, indices);
+//		glDrawArrays(GL_TRIANGLES, 0, 12);
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
