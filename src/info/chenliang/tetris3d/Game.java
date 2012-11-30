@@ -31,7 +31,6 @@ public class Game implements Runnable{
 		blockFrameGenerator = new BlockFrameGenerator();
 		
 		block = new Block(0, 0, 0, 0, blockFrameGenerator.generateBlockFrames());
-		System.out.println(finalMatrix);
 	}
 
 	public void start()

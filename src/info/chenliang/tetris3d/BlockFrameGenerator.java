@@ -42,6 +42,23 @@ public class BlockFrameGenerator {
 	public BlockFrame generateBlockFrame(BlockCell[] blockCells)
 	{
 		float[] vertices = new float[blockCells.length*8*3];
+		float[] colors = new float[blockCells.length*8*3];
+		
+		float red = 0.0f, green = 0.0f, blue = 0.0f;
+		
+		for(int i=0;i < colors.length;i+=3)
+		{
+			if(i == 0 || i%9 == 0)
+			{
+				red = (float)Math.random();
+				green = (float)Math.random();
+				blue = (float)Math.random();
+			}
+			colors[i] = red;
+			colors[i+1] = green;
+			colors[i+2] = blue;
+			
+		}
 		
 		for (int i = 0; i < blockCells.length; i++) {
 			BlockCell blockCell = blockCells[i];
@@ -74,10 +91,10 @@ public class BlockFrameGenerator {
 		
 		for(int i=0; i <vertices.length; i++)
 		{
-			vertices[i] *= 60;
+			vertices[i] *= 40;
 		}
 		
-		byte[] baseIndices= {1,2,3,
+		short[] baseIndices= {1,2,3,
 						 3,0,1,
 						 4,7,6,
 						 4,6,5,
@@ -90,7 +107,7 @@ public class BlockFrameGenerator {
 						 0,3,4,
 						 3,7,4};
 		
-		byte[] indices = new byte[4*6*2*3];
+		short[] indices = new short[4*6*2*3];
 		System.arraycopy(baseIndices, 0, indices, 0, 6*2*3);
 		
 		for(int i=1; i <= 3; i++)
@@ -98,10 +115,10 @@ public class BlockFrameGenerator {
 			int offset = i*6*2*3;
 			for(int j=0; j < baseIndices.length; j++)
 			{
-				indices[offset + j] = (byte)(offset + baseIndices[j]);
+				indices[offset + j] = (short)(i*8 + baseIndices[j]);
 			}
 		}
 		
-		return new BlockFrame(vertices, indices);
+		return new BlockFrame(vertices, indices, colors);
 	}
 }

@@ -31,15 +31,21 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
     printGLString("Renderer", GL_RENDERER);
     printGLString("Extensions", GL_EXTENSIONS);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+
 
 //    "attribute vec4 vertexColor;\n"
 //    			  	  	  	  	  	  	 "varying vec4 interpolatedColor;\n"
 //    "interpolatedColor = vertexColor;\n"
     const GLchar* vertexShaderCode = "uniform mat4 finalMatrix;\n"
     								 "attribute vec4 vertexPosition;\n"
+    								 "attribute vec4 vertexColor;\n"
+    								 "varying vec4 interpolatedColor;\n"
 			  	  	  	  	  	  	 "void main()\n"
 			  	  	  	  	  	  	 "{\n"
 			    					 	 "gl_Position = finalMatrix * vertexPosition;\n"
+    									 "interpolatedColor = vertexColor;\n"
 			  	  	  	  	  	  	 "}\n";
 
     const GLchar** vertexShaderSource = (const GLchar**)malloc(sizeof(const GLchar*));
@@ -57,9 +63,10 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniSurfaceCre
     //"//gl_FragColor = interpolatedColor;\n"
     //"varying vec4 interpolatedColor;\n"
     const GLchar* pixelShaderCode = "precision mediump float;\n"
+    								"varying vec4 interpolatedColor;\n"
     								"void main()\n"
     			  	  	  	  	  	"{\n"
-    									"gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+    									"gl_FragColor = interpolatedColor;\n"
     			  	  	  	  	  	"}\n";
     const GLchar** pixelShaderSource = (const GLchar**)malloc(sizeof(const GLchar*));
     *pixelShaderSource = pixelShaderCode;
@@ -213,11 +220,11 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	glClearColor(1.0, 1.0, 1.0, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glFrontFace(GL_CCW);
+	glFrontFace(GL_CW);
 
 	jclass blockFrameClass = (*env)->FindClass(env, "info/chenliang/tetris3d/BlockFrame");
 
-	for(int i=0; i < size; i ++)
+	for(int i=0; i < 1; i ++)
 	{
 		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
 
@@ -228,9 +235,16 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 		glVertexAttribPointer(vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertices);
 		glEnableVertexAttribArray(vertexPosition);
 
-		jfieldID indicesFieldId = (*env)->GetFieldID(env, blockFrameClass, "indices", "[B");
-		jbyteArray indicesArray = (*env)->GetObjectField(env, blockFrame, indicesFieldId);
-		const jbyte* indices  = (*env)->GetByteArrayElements(env, indicesArray, 0);
+		jfieldID colorsFieldId = (*env)->GetFieldID(env, blockFrameClass, "colors", "[F");
+		jfloatArray colorsArray = (*env)->GetObjectField(env, blockFrame, colorsFieldId);
+		const jfloat* colors  = (*env)->GetFloatArrayElements(env, colorsArray, 0);
+
+		glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, 0, colors);
+		glEnableVertexAttribArray(vertexColor);
+
+		jfieldID indicesFieldId = (*env)->GetFieldID(env, blockFrameClass, "indices", "[S");
+		jshortArray indicesArray = (*env)->GetObjectField(env, blockFrame, indicesFieldId);
+		const jshort* indices  = (*env)->GetShortArrayElements(env, indicesArray, 0);
 
 //		LOGE("%d %d %d", indices[0], indices[1],indices[2]);
 //		LOGE("%d %d %d", indices[3], indices[4],indices[5]);
@@ -243,16 +257,17 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 //		glEnableVertexAttribArray(vertexColor);
 
 		//glEnableVertexAttribArray(indices);
-		glDrawElements(GL_TRIANGLES, 4*6*2, GL_UNSIGNED_BYTE, indices);
-//		glDrawArrays(GL_TRIANGLES, 0, 12);
+		glDrawElements(GL_TRIANGLES, 4*6*2*3, GL_UNSIGNED_SHORT, indices);
+//		glDrawArrays(GL_TRIANGLES, 0, 4*6*2);
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
 			LOGE("erro code %d\n", error);
 		}
 
-		(*env)->ReleaseByteArrayElements(env, indicesArray, indices, JNI_ABORT);
+		(*env)->ReleaseShortArrayElements(env, indicesArray, indices, JNI_ABORT);
 		(*env)->ReleaseFloatArrayElements(env, verticesArray, vertices, JNI_ABORT);
+		(*env)->ReleaseFloatArrayElements(env, colorsArray, colors, JNI_ABORT);
 	}
 
 	(*env)->ReleaseFloatArrayElements(env, finalMatrixArray, finalMatrixPointer, JNI_ABORT);

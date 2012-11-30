@@ -28,23 +28,13 @@ public class OpenglRenderer implements Renderer {
 		float angleInDegrees = angle;
 		
 		Matrix.setIdentityM(game.modelMatrix, 0);
-		Matrix.rotateM(game.modelMatrix, 0, angleInDegrees, 0, 0, 1);
+		Matrix.rotateM(game.modelMatrix, 0, angleInDegrees, 0, 1, 0);
 		
 		//Matrix.setIdentityM(game.viewMatrix, 0);
 		
 		Matrix.multiplyMM(game.finalMatrix, 0, game.viewMatrix, 0, game.modelMatrix, 0);
 		Matrix.multiplyMM(game.finalMatrix, 0, game.projectionMatrix, 0, game.finalMatrix, 0);
-//		for(int i=0;i < 16 ;i ++)
-//		{
-//			if(i % 4 ==0)
-//			{
-//				System.out.println();
-//			}
-//			
-//			System.out.print(game.finalMatrix[i] + " ");
-//		}
-//		
-//		System.out.println();
+
 		jniDrawFrame(game);
 	}
 
@@ -53,7 +43,7 @@ public class OpenglRenderer implements Renderer {
 		
 		 // Position the eye behind the origin.
 	    final float eyeX = 40.0f;
-	    final float eyeY = 0.0f;
+	    final float eyeY = 40.0f;
 	    final float eyeZ = 40.0f;
 	 
 	    // We are looking toward the distance
@@ -77,7 +67,7 @@ public class OpenglRenderer implements Renderer {
 		float bottom = -1.0f;
 		float top = 1.0f;
 		float near = 0.1f;
-		float far = 100f;
+		float far = 75f;
 		
 		Matrix.frustumM(game.projectionMatrix, 0, left, right, bottom, top, near, far);
 		
