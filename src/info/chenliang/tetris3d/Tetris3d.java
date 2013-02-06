@@ -19,7 +19,7 @@ public class Tetris3d extends Activity {
         
         Tetris3dView view = new Tetris3dView(this);
        
-        game = new Game(view);
+        game = new Game(view, this);
         
         view.setEGLContextClientVersion(2);
         OpenglRenderer renderer = new OpenglRenderer(game);

@@ -6,9 +6,9 @@ public class BlockFrame {
 	public short[] indices;
 	public float[] colors;
 
-	public BlockFrame(float[] blockCells, short[] indices, float[] colors) {
+	public BlockFrame(float[] vertices, short[] indices, float[] colors) {
 		super();
-		this.vertices = blockCells;
+		this.vertices = vertices;
 		this.indices = indices;
 		this.colors = colors;
 	}

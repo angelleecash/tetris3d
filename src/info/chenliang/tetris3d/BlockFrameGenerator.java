@@ -1,6 +1,11 @@
 package info.chenliang.tetris3d;
 
 public class BlockFrameGenerator {
+	
+	public BlockFrameGenerator()
+	{
+	}
+	
 	public BlockFrame[] generateBlockFrames()
 	{
 		BlockFrame[] blockFrames = new BlockFrame[4];
