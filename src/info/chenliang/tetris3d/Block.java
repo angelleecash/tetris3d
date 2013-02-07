@@ -4,6 +4,7 @@ public class Block {
 	public float x,y,z;
 	public int color;
 	public BlockFrame[] blockFrames;
+	public int frame;
 	
 	public Block(float x, float y, float z, int color, BlockFrame[] blockFrames) {
 		super();

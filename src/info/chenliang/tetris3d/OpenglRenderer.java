@@ -21,8 +21,8 @@ public class OpenglRenderer implements Renderer {
 	@Override
 	public void onDrawFrame(GL10 gl10) {
 		long time = SystemClock.uptimeMillis() % 10000L;
-		angle += 1;
-		angle %= 360;
+//		angle += 1;
+//		angle %= 360;
 		
 		//float angleInDegrees = (360.0f/10000.0f)*((int)time);
 		float angleInDegrees = angle;

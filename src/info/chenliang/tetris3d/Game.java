@@ -6,10 +6,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.location.Address;
 import android.opengl.GLSurfaceView;
 import android.util.FloatMath;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
-public class Game implements Runnable{
+public class Game implements Runnable, OnTouchListener{
 
 	public static final int REFRESH_INTERVAL = 30;
 	
@@ -292,5 +296,19 @@ public class Game implements Runnable{
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if(block != null)
+		{
+			block.frame += 1;
+			if(block.frame >= block.blockFrames.length)
+			{
+				block = blockGenerator.generate();
+			}
+		}
+		return false;
 	}
 }

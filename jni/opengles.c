@@ -179,7 +179,9 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 	jfieldID blockFramesFieldId = (*env)->GetFieldID(env, blockClass, "blockFrames", "[Linfo/chenliang/tetris3d/BlockFrame;");
 	jobjectArray blockFrameArray = (*env)->GetObjectField(env, block, blockFramesFieldId);
 
-
+	jfieldID blockFrameIndexFieldId = (*env)->GetFieldID(env, blockClass, "frame", "I");
+	jint blockFrameIndex = (*env)->GetIntField(env, block, blockFrameIndexFieldId);
+//	jint blockFrameIndex = 0;
 	int size = (*env)->GetArrayLength(env, blockFrameArray);
 //
 //	float color[4][4] = {
@@ -198,51 +200,48 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 
 	jclass blockFrameClass = (*env)->FindClass(env, "info/chenliang/tetris3d/BlockFrame");
 
-	for(int i=0; i < 1; i ++)
-	{
-		jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, i);
+	jobject blockFrame = (*env)->GetObjectArrayElement(env, blockFrameArray, blockFrameIndex);
 
-		jfieldID verticesFieldId = (*env)->GetFieldID(env, blockFrameClass, "vertices", "[F");
-		jfloatArray verticesArray = (*env)->GetObjectField(env, blockFrame, verticesFieldId);
-		const jfloat* vertices  = (*env)->GetFloatArrayElements(env, verticesArray, 0);
+			jfieldID verticesFieldId = (*env)->GetFieldID(env, blockFrameClass, "vertices", "[F");
+			jfloatArray verticesArray = (*env)->GetObjectField(env, blockFrame, verticesFieldId);
+			const jfloat* vertices  = (*env)->GetFloatArrayElements(env, verticesArray, 0);
 
-		glVertexAttribPointer(vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-		glEnableVertexAttribArray(vertexPosition);
+			glVertexAttribPointer(vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+			glEnableVertexAttribArray(vertexPosition);
 
-		jfieldID colorsFieldId = (*env)->GetFieldID(env, blockFrameClass, "colors", "[F");
-		jfloatArray colorsArray = (*env)->GetObjectField(env, blockFrame, colorsFieldId);
-		const jfloat* colors  = (*env)->GetFloatArrayElements(env, colorsArray, 0);
+			jfieldID colorsFieldId = (*env)->GetFieldID(env, blockFrameClass, "colors", "[F");
+			jfloatArray colorsArray = (*env)->GetObjectField(env, blockFrame, colorsFieldId);
+			const jfloat* colors  = (*env)->GetFloatArrayElements(env, colorsArray, 0);
 
-		glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, 0, colors);
-		glEnableVertexAttribArray(vertexColor);
+			glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, 0, colors);
+			glEnableVertexAttribArray(vertexColor);
 
-		jfieldID indicesFieldId = (*env)->GetFieldID(env, blockFrameClass, "indices", "[S");
-		jshortArray indicesArray = (*env)->GetObjectField(env, blockFrame, indicesFieldId);
-		const jshort* indices  = (*env)->GetShortArrayElements(env, indicesArray, 0);
+			jfieldID indicesFieldId = (*env)->GetFieldID(env, blockFrameClass, "indices", "[S");
+			jshortArray indicesArray = (*env)->GetObjectField(env, blockFrame, indicesFieldId);
+			const jshort* indices  = (*env)->GetShortArrayElements(env, indicesArray, 0);
 
-//		LOGE("%d %d %d", indices[0], indices[1],indices[2]);
-//		LOGE("%d %d %d", indices[3], indices[4],indices[5]);
-//		LOGE("%d %d %d", indices[6], indices[7],indices[8]);
-//		LOGE("%d %d %d", indices[9], indices[10],indices[11]);
-//		LOGE("%d %d %d", indices[12], indices[13],indices[14]);
-//		LOGE("%d %d %d", indices[15], indices[16],indices[17]);
+	//		LOGE("%d %d %d", indices[0], indices[1],indices[2]);
+	//		LOGE("%d %d %d", indices[3], indices[4],indices[5]);
+	//		LOGE("%d %d %d", indices[6], indices[7],indices[8]);
+	//		LOGE("%d %d %d", indices[9], indices[10],indices[11]);
+	//		LOGE("%d %d %d", indices[12], indices[13],indices[14]);
+	//		LOGE("%d %d %d", indices[15], indices[16],indices[17]);
 
-//		glVertexAttribPointer(vertexColor, 1, GL_BYTE, GL_FALSE, 1, indices);
-//		glEnableVertexAttribArray(vertexColor);
+	//		glVertexAttribPointer(vertexColor, 1, GL_BYTE, GL_FALSE, 1, indices);
+	//		glEnableVertexAttribArray(vertexColor);
 
-		//glEnableVertexAttribArray(indices);
-		glDrawElements(GL_TRIANGLES, 4*6*2*3, GL_UNSIGNED_SHORT, indices);
-//		glDrawArrays(GL_TRIANGLES, 0, 4*6*2);
-		GLenum error = glGetError();
-		if(error != GL_NO_ERROR)
-		{
-			LOGE("erro code %d\n", error);
-		}
+			//glEnableVertexAttribArray(indices);
+			glDrawElements(GL_TRIANGLES, 4*6*2*3, GL_UNSIGNED_SHORT, indices);
+	//		glDrawArrays(GL_TRIANGLES, 0, 4*6*2);
+			GLenum error = glGetError();
+			if(error != GL_NO_ERROR)
+			{
+				LOGE("erro code %d\n", error);
+			}
 
-		(*env)->ReleaseShortArrayElements(env, indicesArray, indices, JNI_ABORT);
-		(*env)->ReleaseFloatArrayElements(env, verticesArray, vertices, JNI_ABORT);
-		(*env)->ReleaseFloatArrayElements(env, colorsArray, colors, JNI_ABORT);
-	}
+			(*env)->ReleaseShortArrayElements(env, indicesArray, indices, JNI_ABORT);
+			(*env)->ReleaseFloatArrayElements(env, verticesArray, vertices, JNI_ABORT);
+			(*env)->ReleaseFloatArrayElements(env, colorsArray, colors, JNI_ABORT);
 
 	(*env)->ReleaseFloatArrayElements(env, finalMatrixArray, finalMatrixPointer, JNI_ABORT);
 }

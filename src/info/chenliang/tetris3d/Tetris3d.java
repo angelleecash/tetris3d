@@ -21,6 +21,8 @@ public class Tetris3d extends Activity {
        
         game = new Game(view, this);
         
+        view.setOnTouchListener(game);
+        
         view.setEGLContextClientVersion(2);
         OpenglRenderer renderer = new OpenglRenderer(game);
         view.setRenderer(renderer);
