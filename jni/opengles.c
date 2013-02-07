@@ -191,32 +191,6 @@ JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame
 //
 	//random();
 
-	static float red = 0.0, green=0.0, blue=0.0;
-
-	red += 0.02;
-	green += 0.01;
-	blue += 0.005;
-
-	red = clamp2(0.0f, 1.0f, red);
-	green = clamp2(0.0f, 1.0f, green);
-	blue = clamp2(0.0f, 1.0f, blue);
-
-	if(red >= 1.0f)
-	{
-		red = 0.0f;
-	}
-
-	if(green >= 1.0f)
-	{
-		green = 0.0f;
-	}
-
-	if(blue >= 1.0f)
-	{
-		blue = 0.0f;
-	}
-
-	//glClearColor(red, green, blue, 1.0f);
 	glClearColor(1.0, 1.0, 1.0, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

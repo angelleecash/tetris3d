@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.opengl.GLSurfaceView;
+import android.util.FloatMath;
 
 public class Game implements Runnable{
 
@@ -19,7 +20,7 @@ public class Game implements Runnable{
 	public BlockContainer blockContainer;
 	public Block block;
 	
-	public BlockFrameGenerator blockFrameGenerator;
+	
 //	public Matrix modelMatrix;
 //	public Matrix viewMatrix;
 	//public Matrix projectionMatrix;
@@ -37,9 +38,6 @@ public class Game implements Runnable{
 		this.tetris3d = tetris3d;
 	
 		blockContainer = new BlockContainer();
-		blockFrameGenerator = new BlockFrameGenerator();
-		
-		block = new Block(0, 0, 0, 0, blockFrameGenerator.generateBlockFrames());
 		
 		List<BlockFramePrototype> blockFramePrototypes = loadBlockFramePrototypes();
 		blockGenerator = new BlockGenerator(blockFramePrototypes);
@@ -69,18 +67,18 @@ public class Game implements Runnable{
 			
 			ArrayList<BlockFrame> blockFrames = null;
 			
-			short[] baseIndices= {1,2,3,
-					 3,0,1,
-					 4,7,6,
-					 4,6,5,
-					 0,4,1,
-					 4,5,1,
-					 1,5,2,
-					 5,6,2,
-					 3,6,7,
-					 2,6,3,
-					 0,3,4,
-					 3,7,4};
+			short[] baseIndices= {0,1,3,
+					 1,2,3,
+					 1,2,6,
+					 1,5,6,
+					 5,6,7,
+					 5,4,7,
+					 0,1,5,
+					 0,4,5,
+					 0,4,7,
+					 0,3,3,
+					 2,3,7,
+					 2,6,7};
 			
 			while((line = bufferedReader.readLine()) != null)
 			{
@@ -117,57 +115,83 @@ public class Game implements Runnable{
 							
 							int colorOffset = i*8*3;
 							
+							float red = 0.0f;
+							float green = 0.0f;
+							float blue = 0.0f;
+							
+							if(i == 0)
+							{
+								green = 1.0f;
+							}
+							else if(i == 1)
+							{
+								red = 1.0f;
+							}
+							else if(i == 2)
+							{
+								blue = 1.0f;
+							}
+							else if(i == 3)
+							{
+								red = 1.0f;
+								green = 1.0f;
+							}
+							
 							for(int j=0;j < 8; j++)
 							{
-								colors[colorOffset + j*3] = 0.5f;
-								colors[colorOffset + j*3 + 1] = 0.5f;
-								colors[colorOffset + j*3 + 2] = 0.5f;
+								colors[colorOffset + j*3] = red;
+								colors[colorOffset + j*3 + 1] = green;
+								colors[colorOffset + j*3 + 2] = blue;
 							}
 							
 							int vertexOffset = i*8*3;
 							
-							float z = -1;
+							float z = 1;
 							
 							vertices[vertexOffset + 0] = x;
 							vertices[vertexOffset + 1] = y;
 							vertices[vertexOffset + 2] = z;
 							
-							vertices[vertexOffset + 3] = x+1;
+							vertices[vertexOffset + 3] = x+2;
 							vertices[vertexOffset + 4] = y;
 							vertices[vertexOffset + 5] = z;
 							
-							vertices[vertexOffset + 6] = x+1;
-							vertices[vertexOffset + 7] = y+1;
+							vertices[vertexOffset + 6] = x+2;
+							vertices[vertexOffset + 7] = y+2;
 							vertices[vertexOffset + 8] = z;
 							
 							vertices[vertexOffset + 9] = x;
-							vertices[vertexOffset + 10] = y+1;
+							vertices[vertexOffset + 10] = y+2;
 							vertices[vertexOffset + 11] = z;
 							
-							z = 1;
+							z = -1;
 							
 							vertices[vertexOffset + 12] = x;
 							vertices[vertexOffset + 13] = y;
 							vertices[vertexOffset + 14] = z;
 							
-							vertices[vertexOffset + 15] = x+1;
+							vertices[vertexOffset + 15] = x+2;
 							vertices[vertexOffset + 16] = y;
 							vertices[vertexOffset + 17] = z;
 							
-							vertices[vertexOffset + 18] = x+1;
-							vertices[vertexOffset + 19] = y+1;
+							vertices[vertexOffset + 18] = x+2;
+							vertices[vertexOffset + 19] = y+2;
 							vertices[vertexOffset + 20] = z;
 							
 							vertices[vertexOffset + 21] = x;
-							vertices[vertexOffset + 22] = y+1;
+							vertices[vertexOffset + 22] = y+2;
 							vertices[vertexOffset + 23] = z;
 							
 							int indexOffset = i*6*2*3;
-							
+							int v = i*8;
 							for(int j=0;j < baseIndices.length;j ++)
 							{
-								indices[indexOffset+j] = (short)(baseIndices[j] + indexOffset);
+								indices[indexOffset+j] = (short)(baseIndices[j] + v);
 							}
+						}
+						
+						for (int j = 0; j < vertices.length; j++) {
+							vertices[j] *= 15;
 						}
 						
 						BlockFrame blockFrame = new BlockFrame(vertices, indices, colors);
@@ -179,7 +203,6 @@ public class Game implements Runnable{
 							BlockFramePrototype blockFramePrototype = new BlockFramePrototype(blockFrames);
 							blockFramePrototypes.add(blockFramePrototype);
 							
-							Assert.verify(blockFrames != null && blockFrames.size() == 4, "Invalid block frames");
 							mode = IDLE;
 						}
 					}
@@ -191,7 +214,7 @@ public class Game implements Runnable{
 				}
 			}
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException("Can not load block data", e);
@@ -229,9 +252,15 @@ public class Game implements Runnable{
 		
 	}
 
+	long blockChangeTimer;
 	private void tick()
 	{
-		
+		blockChangeTimer += 100;
+		if(blockChangeTimer >= 20000)
+		{
+			block = blockGenerator.generate();
+			blockChangeTimer = 0;
+		}
 	}
 	
 	private void draw()
