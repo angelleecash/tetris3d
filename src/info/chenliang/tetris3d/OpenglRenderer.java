@@ -42,9 +42,13 @@ public class OpenglRenderer implements Renderer {
 	public void onSurfaceChanged(GL10 gl10, int width, int height) {
 		
 		 // Position the eye behind the origin.
-	    final float eyeX = 40.0f;
-	    final float eyeY = 40.0f;
-	    final float eyeZ = 40.0f;
+//	    final float eyeX = 40.0f;
+//	    final float eyeY = 40.0f;
+//	    final float eyeZ = 40.0f;
+	    
+	    final float eyeX = 0.0f;
+	    final float eyeY = 20.0f;
+	    final float eyeZ = -60.0f;
 	 
 	    // We are looking toward the distance
 	    final float lookX = 0.0f;
@@ -81,7 +85,7 @@ public class OpenglRenderer implements Renderer {
 	
 	static
 	{
-		System.loadLibrary("opengles");
+		System.loadLibrary("game_renderer");
 	}
 	
 	private native void jniSurfaceCreated();

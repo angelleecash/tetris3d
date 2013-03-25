@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.location.Address;
 import android.opengl.GLSurfaceView;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -24,6 +22,7 @@ public class Game implements Runnable, OnTouchListener{
 	public BlockContainer blockContainer;
 	public Block block;
 	
+	public long lastTick;
 	
 //	public Matrix modelMatrix;
 //	public Matrix viewMatrix;
@@ -36,12 +35,19 @@ public class Game implements Runnable, OnTouchListener{
 	
 	public BlockGenerator blockGenerator;
 	
+	public final static int BLOCK_DROP_INTERVAL = 800;
+	
+	public int blockDropTimer;
+	
+	public final static int ROWS = 20;
+	public final static int COLUMNS = 10;
+	
 	public Game(GLSurfaceView view, Tetris3d tetris3d) {
 		super();
 		this.view = view;
 		this.tetris3d = tetris3d;
 	
-		blockContainer = new BlockContainer();
+		blockContainer = new BlockContainer(ROWS, COLUMNS);
 		
 		List<BlockFramePrototype> blockFramePrototypes = loadBlockFramePrototypes();
 		blockGenerator = new BlockGenerator(blockFramePrototypes);
@@ -257,13 +263,21 @@ public class Game implements Runnable, OnTouchListener{
 	}
 
 	long blockChangeTimer;
-	private void tick()
+	private void tick(long timeElapsed)
 	{
-		blockChangeTimer += 100;
-		if(blockChangeTimer >= 20000)
+		blockDropTimer += timeElapsed;
+		
+		if(blockDropTimer >= BLOCK_DROP_INTERVAL)
 		{
-			block = blockGenerator.generate();
-			blockChangeTimer = 0;
+			if(blockContainer.canMoveDown(block))
+			{
+				block.drop(-1f);
+			}
+			else
+			{
+				block = blockGenerator.generate();
+			}
+			blockDropTimer -= BLOCK_DROP_INTERVAL;
 		}
 	}
 	
@@ -275,12 +289,12 @@ public class Game implements Runnable, OnTouchListener{
 	@Override
 	public void run() {
 		running = true;
-		
+		lastTick = System.currentTimeMillis();
 		while(running)
 		{
 			long startTime = System.currentTimeMillis();
-			
-			tick();
+			long timeElapsed = startTime - lastTick;
+			tick(timeElapsed);
 			draw();
 			
 			long timeSpent = System.currentTimeMillis() - startTime;
@@ -303,11 +317,11 @@ public class Game implements Runnable, OnTouchListener{
 	public boolean onTouch(View v, MotionEvent event) {
 		if(block != null)
 		{
-			block.frame += 1;
-			if(block.frame >= block.blockFrames.length)
-			{
-				block = blockGenerator.generate();
-			}
+//			block.frame += 1;
+//			if(block.frame >= block.blockFrames.length)
+//			{
+//				block = blockGenerator.generate();
+//			}
 		}
 		return false;
 	}

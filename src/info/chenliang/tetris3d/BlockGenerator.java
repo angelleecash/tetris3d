@@ -19,7 +19,7 @@ public class BlockGenerator {
 		index %= blockFramePrototypes.size();
 		BlockFramePrototype blockFramePrototype = blockFramePrototypes.get(randomIndex); 
 		
-		Block block = new Block(0, 0, 0, 0, blockFramePrototype.blockFrames.toArray(new BlockFrame[0]));
+		Block block = new Block(0, 20, 0, 0, blockFramePrototype.blockFrames.toArray(new BlockFrame[0]));
 		return block;
 	}
 }
