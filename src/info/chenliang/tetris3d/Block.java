@@ -6,15 +6,25 @@ public class Block {
 	public BlockFrame[] blockFrames;
 	public int frame;
 	public float[] transformedVertices;
+	public int containerX, containerY;
 	
-	public Block(float x, float y, float z, int color, BlockFrame[] blockFrames) {
+	public Block(float x, float y, float z, int color, BlockFrame[] blockFrames, int containerX, int containerY) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.color = color;
 		this.blockFrames = blockFrames;
+		this.containerX = containerX;
+		this.containerY = containerY;
+		
 		copyFromFrame();
+		
+		for(int i=0; i < transformedVertices.length ;i +=3)
+		{
+			transformedVertices[i] += containerX*2;
+			transformedVertices[i+1] += containerY*2;
+		}
 	}
 	
 	public void copyFromFrame(){
@@ -23,14 +33,18 @@ public class Block {
 		System.arraycopy(vertices, 0, this.transformedVertices, 0, vertices.length);
 	}
 	
-	public void drop(float deltaY)
+	public void drop()
 	{
-		y += deltaY;
+		containerY += 2;
 		
 		for(int i=0; i < transformedVertices.length ;i +=3)
 		{
-			transformedVertices[i+1] += deltaY;
+			transformedVertices[i+1] -= 2;
 		}
 	}
 	
+	public BlockFrame currentFrame()
+	{
+		return blockFrames[frame];
+	}
 }

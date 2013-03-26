@@ -1,5 +1,7 @@
 package info.chenliang.tetris3d;
 
+import android.graphics.Point;
+
 public class BlockContainer {
 	
 	public int rows, columns;
@@ -27,10 +29,12 @@ public class BlockContainer {
 
 	public boolean canMoveDown(Block block)
 	{
-		for (int i = 0; i < block.transformedVertices.length; i+=3) 
+		BlockFrame blockFrame = block.currentFrame();
+		
+		for (int i = 0; i < blockFrame.vertices.length; i+=3) 
 		{
-			int x = (int)block.transformedVertices[i];
-			int y = rows - (int)block.transformedVertices[i+1];
+			int x = (block.containerX + (int)blockFrame.vertices[i]) / 2;
+			int y = (block.containerY - (int)blockFrame.vertices[i+1]) / 2;
 			
 			if(x < 0 || x >= columns)
 			{
@@ -54,7 +58,31 @@ public class BlockContainer {
 					return false;
 			}
 		}
-		
+	
 		return true;	
+	}
+	
+	public Point generateStartPosition(BlockFrame blockFrame)
+	{
+		int containerX = 4;
+		int containerY = 2;
+		
+		for (int i = 0; i < blockFrame.vertices.length; i+=3) {
+			int x = (int)blockFrame.vertices[i];
+			int y = (int)blockFrame.vertices[i+1];
+			
+			if(x % 2 == 1)
+			{
+				containerX = 5;
+			}
+			
+			if(y % 2 == 1)
+			{
+				containerY = 3;
+			}
+			
+		}
+		
+		return new Point(containerX, containerY);
 	}
 }

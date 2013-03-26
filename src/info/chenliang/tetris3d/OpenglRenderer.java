@@ -46,13 +46,13 @@ public class OpenglRenderer implements Renderer {
 //	    final float eyeY = 40.0f;
 //	    final float eyeZ = 40.0f;
 	    
-	    final float eyeX = 0.0f;
+	    final float eyeX = 10.0f;
 	    final float eyeY = 20.0f;
-	    final float eyeZ = -60.0f;
+	    final float eyeZ = 55.0f;
 	 
 	    // We are looking toward the distance
-	    final float lookX = 0.0f;
-	    final float lookY = 0.0f;
+	    final float lookX = 10.0f;
+	    final float lookY = 20.0f;
 	    final float lookZ = 0.0f;
 	 
 	    // Set our up vector. This is where our head would be pointing were we holding the camera.
@@ -70,8 +70,8 @@ public class OpenglRenderer implements Renderer {
 		float right = aspectRatio;
 		float bottom = -1.0f;
 		float top = 1.0f;
-		float near = 0.1f;
-		float far = 75f;
+		float near = 1f;
+		float far = 100f;
 		
 		Matrix.frustumM(game.projectionMatrix, 0, left, right, bottom, top, near, far);
 		

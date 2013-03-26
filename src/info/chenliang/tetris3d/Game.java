@@ -13,7 +13,7 @@ import android.view.View.OnTouchListener;
 
 public class Game implements Runnable, OnTouchListener{
 
-	public static final int REFRESH_INTERVAL = 30;
+	public static final int REFRESH_INTERVAL = 500;
 	
 	public boolean running;
 	public Thread thread;
@@ -50,7 +50,7 @@ public class Game implements Runnable, OnTouchListener{
 		blockContainer = new BlockContainer(ROWS, COLUMNS);
 		
 		List<BlockFramePrototype> blockFramePrototypes = loadBlockFramePrototypes();
-		blockGenerator = new BlockGenerator(blockFramePrototypes);
+		blockGenerator = new BlockGenerator(blockContainer, blockFramePrototypes);
 		
 		block = blockGenerator.generate();
 	}
@@ -200,9 +200,9 @@ public class Game implements Runnable, OnTouchListener{
 							}
 						}
 						
-						for (int j = 0; j < vertices.length; j++) {
-							vertices[j] *= 15;
-						}
+//						for (int j = 0; j < vertices.length; j++) {
+//							vertices[j] *= 15;
+//						}
 						
 						BlockFrame blockFrame = new BlockFrame(vertices, indices, colors);
 						blockFrames.add(blockFrame);
@@ -271,7 +271,7 @@ public class Game implements Runnable, OnTouchListener{
 		{
 			if(blockContainer.canMoveDown(block))
 			{
-				block.drop(-1f);
+				block.drop();
 			}
 			else
 			{
