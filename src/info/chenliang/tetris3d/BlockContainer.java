@@ -64,7 +64,7 @@ public class BlockContainer {
 	
 	public Point generateStartPosition(BlockFrame blockFrame)
 	{
-		int containerX = 4;
+		int containerX = 8;
 		int containerY = 2;
 		
 		for (int i = 0; i < blockFrame.vertices.length; i+=3) {
@@ -73,7 +73,7 @@ public class BlockContainer {
 			
 			if(x % 2 == 1)
 			{
-				containerX = 5;
+				containerX = 7;
 			}
 			
 			if(y % 2 == 1)

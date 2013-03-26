@@ -142,6 +142,7 @@ float clamp2(float min, float max, float v) {
  * Signature: (II)V
  */JNIEXPORT void JNICALL Java_info_chenliang_tetris3d_OpenglRenderer_jniDrawFrame(
 		JNIEnv* env, jobject object, jobject game) {
+
 	jclass gameClass = (*env)->GetObjectClass(env, game);
 
 	jfieldID blockContainerFieldId = (*env)->GetFieldID(env, gameClass,
@@ -186,6 +187,66 @@ float clamp2(float min, float max, float v) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glFrontFace(GL_CW);
+
+	//////////////////
+	float wallVertices[] = {0, 0, -1,//0
+							20, 0, 1,//1
+							0, 0, 1,//2
+							20, 0, -1,//3
+
+							0, 0, -1,//4
+							0, 0, 1,//5
+							0, 40, 1,//6
+							0, 40, -1,//7
+
+							0, 40, -1,//8
+							20, 40, 1,//9
+							0, 40, 1,//10
+							20, 40, -1,//11
+
+							20, 0, -1,//12
+							20, 0, 1,//13
+							20, 40, 1,//14
+							20, 40, -1,//15
+							};
+
+	short wallIndices[] = {0,1,2, 0,1,3,
+						   4,5,6, 4,6,7,
+						   8,9,10, 8,10,11,
+						   12,13,14, 12,14,15
+						   };
+
+	float wallColors[] = {0,0,0,
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+						  0,0,0,
+	};
+
+
+	glVertexAttribPointer(vertexPosition, 3, GL_FLOAT, GL_FALSE, 0, wallVertices);
+	glEnableVertexAttribArray(vertexPosition);
+
+	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, 0, wallColors);
+	glEnableVertexAttribArray(vertexColor);
+
+	glDrawElements(GL_TRIANGLES, 8 * 3, GL_UNSIGNED_SHORT, wallIndices);
+
+	//////////////////
 
 	jclass blockFrameClass = (*env)->FindClass(env,
 			"info/chenliang/tetris3d/BlockFrame");

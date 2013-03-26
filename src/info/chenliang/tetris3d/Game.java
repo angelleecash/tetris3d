@@ -13,7 +13,7 @@ import android.view.View.OnTouchListener;
 
 public class Game implements Runnable, OnTouchListener{
 
-	public static final int REFRESH_INTERVAL = 500;
+	public static final int REFRESH_INTERVAL = 400;
 	
 	public boolean running;
 	public Thread thread;

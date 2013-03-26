@@ -22,8 +22,8 @@ public class Block {
 		
 		for(int i=0; i < transformedVertices.length ;i +=3)
 		{
-			transformedVertices[i] += containerX*2;
-			transformedVertices[i+1] += containerY*2;
+			transformedVertices[i] += containerX;
+			transformedVertices[i+1] += 40-containerY;
 		}
 	}
 	
