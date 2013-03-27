@@ -1,50 +1,53 @@
 package info.chenliang.tetris3d;
 
 public class Block {
-	public float x,y,z;
 	public int color;
-	public BlockFrame[] blockFrames;
 	public int frame;
-	public float[] transformedVertices;
-	public int containerX, containerY;
 	
-	public Block(float x, float y, float z, int color, BlockFrame[] blockFrames, int containerX, int containerY) {
+	public int containerX, containerY;
+	public BlockContainer blockContainer;
+	public BlockFramePrototype prototype;
+	public VertexView vertexView;
+	
+	public Block(BlockContainer blockContainer, BlockFramePrototype prototype, int containerX, int containerY) {
 		super();
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.color = color;
-		this.blockFrames = blockFrames;
+		this.blockContainer = blockContainer;
+		this.prototype = prototype;
 		this.containerX = containerX;
 		this.containerY = containerY;
 		
-		copyFromFrame();
-		
-		for(int i=0; i < transformedVertices.length ;i +=3)
-		{
-			transformedVertices[i] += containerX;
-			transformedVertices[i+1] += 40-containerY;
-		}
-	}
-	
-	public void copyFromFrame(){
-		float[] vertices = blockFrames[0].vertices;
-		this.transformedVertices = new float[vertices.length];
-		System.arraycopy(vertices, 0, this.transformedVertices, 0, vertices.length);
+		BlockFrame blockFrame = getCurrentFrame();
+		vertexView = new VertexView(this, blockFrame);
+		vertexView.setPosition(containerX, containerY);
 	}
 	
 	public void drop()
 	{
 		containerY += 2;
-		
-		for(int i=0; i < transformedVertices.length ;i +=3)
-		{
-			transformedVertices[i+1] -= 2;
-		}
+		vertexView.translate(0, -2);
 	}
 	
-	public BlockFrame currentFrame()
+	public void moveToLeft()
 	{
-		return blockFrames[frame];
+		containerX -= 2;
+		vertexView.translate(-2, 0);
+	}
+	
+	public void moveToRight()
+	{
+		containerX += 2;
+		vertexView.translate(2, 0);
+	}
+	
+	public BlockFrame getCurrentFrame()
+	{
+		return prototype.blockFrames[frame];
+	}
+	
+	public BlockFrame getNextFrame()
+	{
+		int nextFrame = frame + 1;
+		nextFrame %= prototype.blockFrames.length;
+		return prototype.blockFrames[nextFrame];
 	}
 }

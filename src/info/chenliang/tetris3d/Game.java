@@ -13,7 +13,7 @@ import android.view.View.OnTouchListener;
 
 public class Game implements Runnable, OnTouchListener{
 
-	public static final int REFRESH_INTERVAL = 400;
+	public static final int REFRESH_INTERVAL = 30;
 	
 	public boolean running;
 	public Thread thread;
@@ -35,12 +35,14 @@ public class Game implements Runnable, OnTouchListener{
 	
 	public BlockGenerator blockGenerator;
 	
-	public final static int BLOCK_DROP_INTERVAL = 800;
+	public final static int BLOCK_DROP_INTERVAL = 500;
 	
 	public int blockDropTimer;
 	
 	public final static int ROWS = 20;
 	public final static int COLUMNS = 10;
+
+	public GameAction gameAction = GameAction.NONE;
 	
 	public Game(GLSurfaceView view, Tetris3d tetris3d) {
 		super();
@@ -210,7 +212,7 @@ public class Game implements Runnable, OnTouchListener{
 						index ++;
 						if(index >= count)
 						{
-							BlockFramePrototype blockFramePrototype = new BlockFramePrototype(blockFrames);
+							BlockFramePrototype blockFramePrototype = new BlockFramePrototype(blockFrames.toArray(new BlockFrame[0]));
 							blockFramePrototypes.add(blockFramePrototype);
 							
 							mode = IDLE;
@@ -267,7 +269,36 @@ public class Game implements Runnable, OnTouchListener{
 	{
 		blockDropTimer += timeElapsed;
 		
+		boolean shouldTestDown = false; 
+		
 		if(blockDropTimer >= BLOCK_DROP_INTERVAL)
+		{
+			shouldTestDown = true;
+			blockDropTimer -= BLOCK_DROP_INTERVAL;
+		}
+		
+		switch (gameAction) {
+		case MOVE_DOWN:
+			shouldTestDown = true;
+			break;
+		case MOVE_LEFT:
+			if(blockContainer.canMoveLeft(block))
+			{
+				block.moveToLeft();
+			}
+			break;
+		case MOVE_RIGHT:
+			boolean can = blockContainer.canMoveRight(block);
+			if(can)
+			{
+				block.moveToRight();
+			}
+			break;
+		default:
+			break;
+		}
+		
+		if(shouldTestDown)
 		{
 			if(blockContainer.canMoveDown(block))
 			{
@@ -277,7 +308,6 @@ public class Game implements Runnable, OnTouchListener{
 			{
 				block = blockGenerator.generate();
 			}
-			blockDropTimer -= BLOCK_DROP_INTERVAL;
 		}
 	}
 	
@@ -296,7 +326,7 @@ public class Game implements Runnable, OnTouchListener{
 			long timeElapsed = startTime - lastTick;
 			tick(timeElapsed);
 			draw();
-			
+			lastTick = startTime;
 			long timeSpent = System.currentTimeMillis() - startTime;
 			long sleepTime = REFRESH_INTERVAL - timeSpent;
 			if(sleepTime > 0)
@@ -315,13 +345,31 @@ public class Game implements Runnable, OnTouchListener{
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		float x = event.getX();
+		float y = event.getY();
+		
 		if(block != null)
 		{
-//			block.frame += 1;
-//			if(block.frame >= block.blockFrames.length)
-//			{
-//				block = blockGenerator.generate();
-//			}
+			switch (event.getAction()) {
+	        case MotionEvent.ACTION_MOVE:
+	        	break;
+	        case MotionEvent.ACTION_POINTER_UP:
+	        	break;
+	        case MotionEvent.ACTION_UP:
+	        	gameAction = GameAction.NONE;
+	        	break;
+	        case MotionEvent.ACTION_DOWN:
+	        	if(x < view.getWidth() / 2)
+				{
+	        		gameAction = GameAction.MOVE_LEFT;
+				}
+	        	else
+	        	{
+	        		gameAction = GameAction.MOVE_RIGHT;
+	        	}
+	        	
+	        	break;
+			}
 		}
 		return false;
 	}

@@ -21,14 +21,14 @@ public class BlockGenerator {
 		
 		index ++;
 		index %= blockFramePrototypes.size();
+		
+		randomIndex = 5;
 		BlockFramePrototype blockFramePrototype = blockFramePrototypes.get(randomIndex); 
 		
-		BlockFrame[] blockFrames = blockFramePrototype.blockFrames.toArray(new BlockFrame[0]);
-		
-		BlockFrame blockFrame = blockFrames[0];
+		BlockFrame blockFrame = blockFramePrototype.blockFrames[0];
 		Point startPosition = blockContainer.generateStartPosition(blockFrame); 
 		
-		Block block = new Block(0, 20, 0, 0, blockFrames, startPosition.x, startPosition.y);
+		Block block = new Block(blockContainer, blockFramePrototype, startPosition.x, startPosition.y);
 		return block;
 	}
 }

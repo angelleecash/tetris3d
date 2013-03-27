@@ -6,7 +6,7 @@ public class BlockContainer {
 	
 	public int rows, columns;
 	
-	public BlockContainerCell[][] data;
+	public BlockContainerCell[][] cells;
 	
 	public BlockContainer(int rows, int columns) {
 		super();
@@ -18,27 +18,34 @@ public class BlockContainer {
 	
 	private void init()
 	{
-		data = new BlockContainerCell[rows][columns];
+		cells = new BlockContainerCell[rows][columns];
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
 				BlockContainerCell cell = new BlockContainerCell(j, i);
-				data[i][j] = cell;
+				cells[i][j] = cell;
 			}
 		}
 	}
 
-	public boolean canMoveDown(Block block)
+	public boolean canBePlacedtAt(BlockFrame blockFrame, int containerX, int containerY)
 	{
-		BlockFrame blockFrame = block.currentFrame();
+		boolean result = true;
 		
-		for (int i = 0; i < blockFrame.vertices.length; i+=3) 
+		detection:for (int i = 0; i < blockFrame.vertices.length; i+=3*8) 
 		{
-			int x = (block.containerX + (int)blockFrame.vertices[i]) / 2;
-			int y = (block.containerY - (int)blockFrame.vertices[i+1]) / 2;
+			int originalX = containerX + (int)blockFrame.vertices[i];
+			int originalY = containerY - (int)blockFrame.vertices[i+1];
+			
+			if(originalX %2 != 0) throw new RuntimeException("");
+			if(originalY %2 != 0) throw new RuntimeException("");
+			
+			int x = (originalX) / 2;
+			int y = (originalY) / 2;
 			
 			if(x < 0 || x >= columns)
 			{
-				continue;
+				result = false;
+				break;
 			}
 			
 			if(y < 0)
@@ -46,20 +53,45 @@ public class BlockContainer {
 				continue;
 			}
 			
-			if(y >= rows - 1)
+			if(y >= rows)
 			{
-				return false;
+				result = false;
+				break;
 			}
 			
-			BlockContainerCell cell = data[y][x];
+			BlockContainerCell cell = cells[y][x];
 			switch (cell.state)
 			{
 				case OCCUPIED:
-					return false;
+					result = false;
+					break detection;
 			}
 		}
 	
-		return true;	
+		return result;
+	}
+	
+	public boolean canMoveDown(Block block)
+	{
+		BlockFrame blockFrame = block.getCurrentFrame();
+		return canBePlacedtAt(blockFrame, block.containerX, block.containerY+2);	
+	}
+	
+	public boolean canMoveLeft(Block block)
+	{
+		BlockFrame blockFrame = block.getCurrentFrame();
+		return canBePlacedtAt(blockFrame, block.containerX-2, block.containerY);
+	}
+	
+	public boolean canMoveRight(Block block)
+	{
+		BlockFrame blockFrame = block.getCurrentFrame();
+		return canBePlacedtAt(blockFrame, block.containerX+2, block.containerY);
+	}
+	
+	public boolean canRotate(Block block) 
+	{
+		return canBePlacedtAt(block.getNextFrame(), block.containerX, block.containerY);
 	}
 	
 	public Point generateStartPosition(BlockFrame blockFrame)
@@ -82,7 +114,8 @@ public class BlockContainer {
 			}
 			
 		}
-		
+//		containerX = 7;
+//		containerY = 3;
 		return new Point(containerX, containerY);
 	}
 }
